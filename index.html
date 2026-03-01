@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>VCF QR Generator (GitHub Compatible)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+body{
+font-family:Arial;
+text-align:center;
+padding:20px;
+background:#f2f2f2;
+}
+input,button{
+padding:10px;
+margin:5px;
+width:260px;
+}
+#qrcode{margin-top:20px;}
+.box{
+background:white;
+padding:20px;
+border-radius:10px;
+display:inline-block;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>Step 1: Create VCF File</h2>
+
+<input id="name" placeholder="Full Name"><br>
+<input id="phone" placeholder="Phone Number"><br>
+<input id="email" placeholder="Email"><br>
+
+<button onclick="createVCF()">Download VCF File</button>
+
+<hr>
+
+<h2>Step 2: Paste VCF File URL (from GitHub)</h2>
+
+<input id="vcfurl" placeholder="https://username.github.io/contact.vcf"><br>
+
+<button onclick="generateQR()">Generate QR Code</button>
+
+<div id="qrcode"></div>
+</div>
+
+<script>
+function createVCF(){
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let email=document.getElementById("email").value;
+
+let vcard =
+`BEGIN:VCARD
+VERSION:3.0
+FN:${name}
+TEL:${phone}
+EMAIL:${email}
+END:VCARD`;
+
+let blob = new Blob([vcard], {type:"text/vcard"});
+let link = document.createElement("a");
+link.href = URL.createObjectURL(blob);
+link.download = "contact.vcf";
+link.click();
+}
+
+function generateQR(){
+document.getElementById("qrcode").innerHTML="";
+let url=document.getElementById("vcfurl").value;
+
+new QRCode(document.getElementById("qrcode"),{
+text:url,
+width:250,
+height:250
+});
+}
+</script>
+
+</body>
+</html>
